@@ -1,0 +1,6 @@
+Day 1:
+- Created MVC project
+- Configured EF Core
+- Created initial migration
+- Implemented Category Repository
+-----------------------------------------
