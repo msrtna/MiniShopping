@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.Data;
@@ -12,7 +13,7 @@ namespace MiniShopping.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,13 @@ namespace MiniShopping.Web
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await MiniShopping.Web.Data.SeedData.SeedRolesAsync(services);
+                await MiniShopping.Web.Data.SeedData.SeedAdminAsync(services);
+            }
 
             app.Run();
         }

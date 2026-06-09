@@ -33,7 +33,30 @@ namespace MiniShopping.Web.Controllers
                 return View(dto);
             }
 
-            return RedirectToAction("Login");
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var result = await _accountService.LoginAsync(dto);
+
+            if (result != "Login successful")
+            {
+                ModelState.AddModelError("", result);
+                return View(dto);
+            }
+
+            return RedirectToAction("Home");
         }
     }
 }

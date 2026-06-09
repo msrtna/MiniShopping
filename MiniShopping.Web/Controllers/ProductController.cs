@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MiniShopping.Web.DTOs.ProductDtos;
 using MiniShopping.Web.Services.CategoryServices;
@@ -6,6 +7,7 @@ using MiniShopping.Web.Services.ProductServices;
 
 namespace MiniShopping.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _service;
