@@ -1,0 +1,39 @@
+﻿using Microsoft.EntityFrameworkCore;
+using MiniShopping.Web.Data;
+using MiniShopping.Web.Models;
+
+namespace MiniShopping.Web.Repositories
+{
+    public class CategoryRepository : ICategoryRepository
+    {
+        private readonly AppDbContext _context;
+        public CategoryRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<Category>> GetAllAsync()
+        {
+            return await _context.Categories.ToListAsync();
+        }
+        public async Task<Category?> GetByIdAsync(int id)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+        }
+        public async Task AddAsync(Category category)
+        {
+            await _context.Categories.AddAsync(category);
+        }
+        public Task UpdateAsinc(Category category)
+        {
+            _context.Categories.Update(category);
+            return Task.CompletedTask;
+        }
+        public async Task DeleteAsync(int id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category != null)
+                _context.Categories.Remove(category);
+        }
+    }
+}
