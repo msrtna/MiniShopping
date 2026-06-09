@@ -10,7 +10,6 @@
     <Folder Include="Services\BasketItem\" />
     <Folder Include="Services\OrderItem\" />
     <Folder Include="Services\Order\" />
-    <Folder Include="Services\Product\" />
     <Folder Include="Services\User\" />
   </ItemGroup>
 

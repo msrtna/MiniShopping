@@ -18,7 +18,7 @@ namespace MiniShopping.Web.Repositories
         }
         public async Task<Category?> GetByIdAsync(int id)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Categories.FindAsync(id);
         }
         public async Task AddAsync(Category category)
         {
