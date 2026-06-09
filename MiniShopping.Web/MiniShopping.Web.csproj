@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,10 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\BasketItem\" />
-    <Folder Include="Services\OrderItem\" />
-    <Folder Include="Services\Order\" />
-    <Folder Include="Services\User\" />
+    <Folder Include="Services\BasketItemServices\" />
+    <Folder Include="Services\OrderItemServices\" />
+    <Folder Include="Services\OrderServices\" />
   </ItemGroup>
 
   <ItemGroup>

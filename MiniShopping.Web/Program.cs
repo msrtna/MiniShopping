@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.Data;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.Repositories;
+using MiniShopping.Web.Services.AccountServices;
 using MiniShopping.Web.Services.CategoryServices;
 using MiniShopping.Web.Services.ProductServices;
 using MiniShopping.Web.UnitOfWorks;
@@ -37,6 +38,7 @@ namespace MiniShopping.Web
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
 
             var app = builder.Build();
