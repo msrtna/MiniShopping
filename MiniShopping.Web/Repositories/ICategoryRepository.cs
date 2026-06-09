@@ -7,7 +7,7 @@ namespace MiniShopping.Web.Repositories
         Task<List<Category>> GetAllAsync();
         Task<Category?> GetByIdAsync(int id);
         Task AddAsync(Category category);
-        Task UpdateAsinc(Category category);
+        Task UpdateAsync(Category category);
         Task DeleteAsync(int id);
     }
 }

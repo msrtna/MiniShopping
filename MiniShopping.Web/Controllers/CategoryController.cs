@@ -50,5 +50,24 @@ namespace MiniShopping.Web.Controllers
             await _service.UpdateAsync(dto);
             return RedirectToAction(nameof(Index));
         }
+
+        // Delete ------------>>>
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var category = await _service.GetByIdAsync(id);
+            var dto = new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+            return View(dto);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete(CategoryDto dto)
+        {
+            await _service.DeleteAsync(dto.Id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

@@ -1,25 +1,32 @@
 ﻿@model MiniShopping.Web.DTOs.CategoryDtos.UpdateCategoryDto
 
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
 <h2>Edit Category</h2>
 
-<form method="post">
+<form asp-controller="Category" asp-action="Edit" method="post">
+
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <input asp-for="Id" type="hidden" />
 
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
 
-        <input asp-for="Name"
-               class="form-control" />
+        <input asp-for="Name" class="form-control" />
+
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit"
-            class="btn btn-warning">
-        Update
+    <button type="submit" class="btn btn-warning">
+        Save Changes
     </button>
 
-    <a asp-action="Index"
-       class="btn btn-secondary">
+    <a asp-action="Index" class="btn btn-secondary">
         Back
     </a>
 

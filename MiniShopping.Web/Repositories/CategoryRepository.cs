@@ -24,7 +24,7 @@ namespace MiniShopping.Web.Repositories
         {
             await _context.Categories.AddAsync(category);
         }
-        public Task UpdateAsinc(Category category)
+        public Task UpdateAsync(Category category)
         {
             _context.Categories.Update(category);
             return Task.CompletedTask;

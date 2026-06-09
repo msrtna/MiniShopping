@@ -50,7 +50,7 @@ namespace MiniShopping.Web.Services.CategoryServices
                 throw new Exception("Category not found");
             category.Name = dto.Name;
 
-            await _uow.Category.UpdateAsinc(category);
+            await _uow.Category.UpdateAsync(category);
             await _uow.SaveAsync();
 
             return "Category updated successfuly";
