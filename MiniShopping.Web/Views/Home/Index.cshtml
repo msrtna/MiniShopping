@@ -1,8 +1,60 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Microsoft.AspNetCore.Identity
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center mt-5">
+
+    <h1>Mini Shopping</h1>
+
+    <p>Simple ASP.NET MVC Shop</p>
+
+    @if (!User.Identity!.IsAuthenticated)
+    {
+        <a asp-controller="Account"
+           asp-action="Login"
+           class="btn btn-primary me-2">
+            Login
+        </a>
+
+        <a asp-controller="Account"
+           asp-action="Register"
+           class="btn btn-success me-2">
+            Register
+        </a>
+
+        <a asp-controller="Product"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            Browse Products
+        </a>
+    }
+    else
+    {
+        <p>
+            Welcome, @User.Identity.Name
+        </p>
+
+        <a asp-controller="Product"
+           asp-action="Index"
+           class="btn btn-primary me-2">
+            Products
+        </a>
+
+        <a asp-controller="Basket"
+           asp-action="Index"
+           class="btn btn-success me-2">
+            Basket
+        </a>
+
+        <form asp-controller="Account"
+              asp-action="Logout"
+              method="post"
+              class="d-inline">
+
+            @Html.AntiForgeryToken()
+
+            <button class="btn btn-danger">
+                Logout
+            </button>
+
+        </form>
+    }
 </div>

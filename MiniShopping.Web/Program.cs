@@ -5,6 +5,7 @@ using MiniShopping.Web.Data;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.Repositories;
 using MiniShopping.Web.Services.AccountServices;
+using MiniShopping.Web.Services.BasketItemServices;
 using MiniShopping.Web.Services.CategoryServices;
 using MiniShopping.Web.Services.ProductServices;
 using MiniShopping.Web.UnitOfWorks;
@@ -34,13 +35,14 @@ namespace MiniShopping.Web
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
-            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-
+            builder.Services.AddScoped<IBasketRepository, BasketRepository>();
+            builder.Services.AddScoped<IBasketService, BasketService>();
 
             var app = builder.Build();
 

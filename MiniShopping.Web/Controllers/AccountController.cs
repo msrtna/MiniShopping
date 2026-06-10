@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using MiniShopping.Web.DTOs.AccountDtos;
+using MiniShopping.Web.Models;
 using MiniShopping.Web.Services.AccountServices;
 
 namespace MiniShopping.Web.Controllers
@@ -7,10 +9,14 @@ namespace MiniShopping.Web.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(
+            IAccountService service,
+            SignInManager<ApplicationUser> signInManager)
         {
-            _accountService = accountService;
+            _accountService = service;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -33,7 +39,7 @@ namespace MiniShopping.Web.Controllers
                 return View(dto);
             }
 
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -56,7 +62,16 @@ namespace MiniShopping.Web.Controllers
                 return View(dto);
             }
 
-            return RedirectToAction("Home");
+            return RedirectToAction("Index", "Product");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }

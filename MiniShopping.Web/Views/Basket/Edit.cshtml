@@ -1,0 +1,44 @@
+﻿@model MiniShopping.Web.DTOs.BasketItemDtos.UpdateBasketItemDto
+
+@{
+    ViewData["Title"] = "Update Quantity";
+}
+
+<h2>Update Quantity</h2>
+
+<form method="post">
+
+    @Html.AntiForgeryToken()
+
+    <input asp-for="Id" type="hidden" />
+
+    <div class="mb-3">
+
+        <label asp-for="Quantity"
+               class="form-label">
+        </label>
+
+        <input asp-for="Quantity"
+               class="form-control" />
+
+        <span asp-validation-for="Quantity"
+              class="text-danger">
+        </span>
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Save
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back
+    </a>
+
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

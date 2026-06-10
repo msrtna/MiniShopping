@@ -7,17 +7,19 @@ namespace MiniShopping.Web.UnitOfWorks
     {
         private readonly AppDbContext _context;
         public ICategoryRepository Category { get; }
-
         public IProductRepository Product { get; }
+        public IBasketRepository Basket { get; }
 
         public UnitOfWork(
             AppDbContext context,
             ICategoryRepository category,
-            IProductRepository product)
+            IProductRepository product,
+            IBasketRepository basket)
         {
             _context = context;
             Category = category;
             Product = product;
+            Basket = basket;
         }
 
         public async Task<int> SaveAsync()

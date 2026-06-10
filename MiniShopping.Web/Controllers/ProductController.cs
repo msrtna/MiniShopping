@@ -7,7 +7,6 @@ using MiniShopping.Web.Services.ProductServices;
 
 namespace MiniShopping.Web.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _service;
@@ -26,6 +25,7 @@ namespace MiniShopping.Web.Controllers
         }
 
         // Create ------------>>>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -41,6 +41,7 @@ namespace MiniShopping.Web.Controllers
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateProductDto dto)
         {
             await _service.AddAsync(dto);
@@ -49,6 +50,7 @@ namespace MiniShopping.Web.Controllers
 
         // Update ------------>>>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _service.GetByIdAsync(id);
@@ -73,6 +75,7 @@ namespace MiniShopping.Web.Controllers
             return View(dto);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(UpdateProductDto dto)
         {
             await _service.UpdateAsync(dto);
@@ -81,6 +84,7 @@ namespace MiniShopping.Web.Controllers
 
         // Delete ------------>>>
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _service.GetByIdAsync(id);
@@ -97,6 +101,7 @@ namespace MiniShopping.Web.Controllers
             return View(dto);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(ProductDto dto)
         {
             await _service.DeleteAsync(dto.Id);

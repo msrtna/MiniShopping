@@ -6,6 +6,7 @@ namespace MiniShopping.Web.UnitOfWorks
     {
         public ICategoryRepository Category { get; }
         public IProductRepository Product { get; }
+        public IBasketRepository Basket { get; }
 
         public Task<int> SaveAsync();
     }

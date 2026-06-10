@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\BasketItemServices\" />
     <Folder Include="Services\OrderItemServices\" />
     <Folder Include="Services\OrderServices\" />
   </ItemGroup>
