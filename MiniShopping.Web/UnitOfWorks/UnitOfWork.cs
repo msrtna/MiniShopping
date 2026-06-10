@@ -9,17 +9,23 @@ namespace MiniShopping.Web.UnitOfWorks
         public ICategoryRepository Category { get; }
         public IProductRepository Product { get; }
         public IBasketRepository Basket { get; }
+        public IOrderRepository Order { get; }
+        public IOrderItemRepository OrderItem { get; }
 
         public UnitOfWork(
             AppDbContext context,
             ICategoryRepository category,
             IProductRepository product,
-            IBasketRepository basket)
+            IBasketRepository basket,
+            IOrderRepository order,
+            IOrderItemRepository orderItem)
         {
             _context = context;
             Category = category;
             Product = product;
             Basket = basket;
+            Order = order;
+            OrderItem = orderItem;
         }
 
         public async Task<int> SaveAsync()
