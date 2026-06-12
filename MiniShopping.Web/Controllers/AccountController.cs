@@ -32,13 +32,11 @@ namespace MiniShopping.Web.Controllers
                 return View(dto);
 
             var result = await _accountService.RegisterAsync(dto);
-
-            if (result != "User created successfully")
+            if (!result.Contains("successfully"))
             {
                 ModelState.AddModelError("", result);
                 return View(dto);
             }
-
             return RedirectToAction("Index", "Home");
         }
 
@@ -61,7 +59,6 @@ namespace MiniShopping.Web.Controllers
                 ModelState.AddModelError("", result);
                 return View(dto);
             }
-
             return RedirectToAction("Index", "Product");
         }
 

@@ -25,9 +25,7 @@ namespace MiniShopping.Web.Services.AccountServices
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (!result.Succeeded)
-            {
                 return string.Join(", ", result.Errors.Select(e => e.Description));
-            }
 
             await _userManager.AddToRoleAsync(user, "User");
 

@@ -1,6 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.Data;
+using MiniShopping.Web.Extensions;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.Repositories;
 using MiniShopping.Web.Services.AccountServices;
@@ -10,6 +13,7 @@ using MiniShopping.Web.Services.OrderServices;
 using MiniShopping.Web.Services.ProductServices;
 using MiniShopping.Web.Services.UserServices;
 using MiniShopping.Web.UnitOfWorks;
+using MiniShopping.Web.Validators;
 
 namespace MiniShopping.Web
 {
@@ -21,6 +25,9 @@ namespace MiniShopping.Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddFluentValidationClientsideAdapters();
+            builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {
@@ -54,9 +61,9 @@ namespace MiniShopping.Web
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+            app.UseGlobalExceptionHandling();
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -73,8 +80,8 @@ namespace MiniShopping.Web
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                await MiniShopping.Web.Data.SeedData.SeedRolesAsync(services);
-                await MiniShopping.Web.Data.SeedData.SeedAdminAsync(services);
+                await SeedData.SeedRolesAsync(services);
+                await SeedData.SeedAdminAsync(services);
             }
 
             app.Run();

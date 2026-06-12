@@ -1,0 +1,19 @@
+﻿@model MiniShopping.Web.Models.ErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="alert alert-danger">
+
+    <h2>Oops!</h2>
+
+    <p>@Model.Message</p>
+
+</div>
+
+<a asp-controller="Home"
+   asp-action="Index"
+   class="btn btn-primary">
+    Back to Home
+</a>
