@@ -25,5 +25,14 @@ namespace MiniShopping.Web.Repositories
         {
             await _context.Orders.AddAsync(order);
         }
+        public async Task<List<Order>> GetAllAsync()
+        {
+            return await _context.Orders.Include(o => o.User).OrderByDescending(o => o.OrderDate).ToListAsync();
+        }
+        public Task UpdateAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            return Task.CompletedTask;
+        }
     }
 }

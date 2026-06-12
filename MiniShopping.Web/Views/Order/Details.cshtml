@@ -32,8 +32,18 @@
     </tbody>
 
 </table>
-
-<a asp-action="Index"
-   class="btn btn-secondary">
-    Back
-</a>
+@if (User.IsInRole("Admin"))
+{
+    <a asp-controller="Admin"
+       asp-action="Orders"
+       class="btn btn-secondary">
+        Back
+    </a>
+}
+else
+{
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back
+    </a>
+}

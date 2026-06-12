@@ -124,5 +124,44 @@ namespace MiniShopping.Web.Services.OrderServices
                 TotalAmount = o.TotalAmount
             }).ToList();
         }
+        public async Task<List<AdminOrderDto>> GetAllOrdersAsync()
+        {
+            var orders = await _uow.Order.GetAllAsync();
+
+            return orders.Select(o => new AdminOrderDto
+            {
+                Id = o.Id,
+                UserEmail = o.User.Email ?? "",
+                OrderDate = o.OrderDate,
+                TotalAmount = o.TotalAmount,
+                Status = o.Status
+            }).ToList();
+        }
+        public async Task<string> UpdateStatusAsync(int orderId, string status)
+        {
+            var order = await _uow.Order.GetByIdAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            var validStatuses = new[]
+            {
+                "Pending",
+                "Processing",
+                "Completed",
+                "Cancelled"
+            };
+
+            if (!validStatuses.Contains(status))
+                throw new Exception("Invalid status.");
+
+            order.Status = status;
+
+            await _uow.Order.UpdateAsync(order);
+
+            await _uow.SaveAsync();
+
+            return "Order status updated successfully.";
+        }
     }
 }

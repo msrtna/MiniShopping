@@ -34,6 +34,16 @@
 
         @if (User.IsInRole("Admin"))
         {
+            <a asp-controller="Admin"
+               asp-action="Orders"
+               class="btn btn-success me-2">
+                Orders
+            </a>
+            <a asp-controller="Admin"
+               asp-action="Users"
+               class="btn btn-primary me-2">
+                Users
+            </a>
             <a asp-controller="Category"
                asp-action="Index"
                class="btn btn-success me-2">
