@@ -100,7 +100,6 @@ namespace MiniShopping.Web.Services.BasketItemServices
                 ProductName = basket.Product?.Name ?? "",
                 Quantity = basket.Quantity,
                 UnitPrice = basket.Product?.Price ?? 0,
-                TotalPrice = 0
             };
         }
     }

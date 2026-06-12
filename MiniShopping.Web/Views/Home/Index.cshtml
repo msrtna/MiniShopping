@@ -32,18 +32,33 @@
             Welcome, @User.Identity.Name
         </p>
 
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Category"
+               asp-action="Index"
+               class="btn btn-success me-2">
+                Category
+            </a>
+        }
+
         <a asp-controller="Product"
            asp-action="Index"
            class="btn btn-primary me-2">
             Products
         </a>
-
-        <a asp-controller="Basket"
-           asp-action="Index"
-           class="btn btn-success me-2">
-            Basket
-        </a>
-
+        @if (!User.IsInRole("Admin"))
+        {
+            <a asp-controller="Basket"
+               asp-action="Index"
+               class="btn btn-success me-2">
+                Basket
+            </a>
+            <a asp-controller="Order"
+               asp-action="Index"
+               class="btn btn-outline-secondary">
+                Order history
+            </a>
+        }
         <form asp-controller="Account"
               asp-action="Logout"
               method="post"

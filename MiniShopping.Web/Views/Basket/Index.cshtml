@@ -5,7 +5,12 @@
 }
 
 <h2>My Basket</h2>
-
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
 @if (!Model.Any())
 {
     <div class="alert alert-info">
@@ -73,4 +78,16 @@ else
             @Model.Sum(x => x.TotalPrice)
         </h4>
     </div>
+    <form asp-controller="Order"
+          asp-action="Checkout"
+          method="post">
+
+        @Html.AntiForgeryToken()
+
+        <button type="submit"
+                class="btn btn-success">
+            Checkout
+        </button>
+
+    </form>
 }

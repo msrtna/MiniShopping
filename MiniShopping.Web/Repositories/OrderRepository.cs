@@ -21,9 +21,9 @@ namespace MiniShopping.Web.Repositories
         {
             return await _context.Orders.Include(o=> o.OrderItems).ThenInclude(p=> p.Product).FirstOrDefaultAsync(o=> o.Id == id);
         }
-        public async Task AddAsync(Order item)
+        public async Task AddAsync(Order order)
         {
-            await _context.Orders.AddAsync(item);
+            await _context.Orders.AddAsync(order);
         }
     }
 }

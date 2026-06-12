@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.Data;
@@ -7,6 +6,7 @@ using MiniShopping.Web.Repositories;
 using MiniShopping.Web.Services.AccountServices;
 using MiniShopping.Web.Services.BasketItemServices;
 using MiniShopping.Web.Services.CategoryServices;
+using MiniShopping.Web.Services.OrderServices;
 using MiniShopping.Web.Services.ProductServices;
 using MiniShopping.Web.UnitOfWorks;
 
@@ -43,6 +43,9 @@ namespace MiniShopping.Web
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IBasketRepository, BasketRepository>();
             builder.Services.AddScoped<IBasketService, BasketService>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
             var app = builder.Build();
 

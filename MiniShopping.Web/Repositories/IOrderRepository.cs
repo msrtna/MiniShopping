@@ -6,6 +6,6 @@ namespace MiniShopping.Web.Repositories
     {
         Task<List<Order>> GetOrdersAsync(string userId);
         Task<Order?> GetByIdAsync(int id);
-        Task AddAsync(Order item);
+        Task AddAsync(Order order);
     }
 }
