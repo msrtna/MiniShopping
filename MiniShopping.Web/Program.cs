@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.Data;
 using MiniShopping.Web.Extensions;
+using MiniShopping.Web.Mappings;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.Repositories;
 using MiniShopping.Web.Services.AccountServices;
@@ -28,6 +29,7 @@ namespace MiniShopping.Web
             builder.Services.AddFluentValidationAutoValidation();
             builder.Services.AddFluentValidationClientsideAdapters();
             builder.Services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
 
             builder.Services.AddDbContext<AppDbContext>(options =>
             {

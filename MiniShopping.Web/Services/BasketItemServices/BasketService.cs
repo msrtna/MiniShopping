@@ -1,4 +1,5 @@
-﻿using MiniShopping.Web.DTOs.BasketItemDtos;
+﻿using AutoMapper;
+using MiniShopping.Web.DTOs.BasketItemDtos;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.UnitOfWorks;
 
@@ -7,26 +8,20 @@ namespace MiniShopping.Web.Services.BasketItemServices
     public class BasketService : IBasketService
     {
         private readonly IUnitOfWork _uow;
-
-        public BasketService(IUnitOfWork uow)
+        private readonly IMapper _mapper;
+        public BasketService(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
 
         public async Task<List<BasketItemDto>> GetBasketItemsAsync(string userId)
         {
             var basket = await _uow.Basket.GetBasketItemsAsync(userId);
-            return basket.Select(b => new BasketItemDto
-            {
-                Id = b.Id,
-                UserId = userId,
-                ProductId = b.ProductId,
-                ProductName = b.Product?.Name ?? "",
-                Quantity = b.Quantity,
-                UnitPrice = b.Product?.Price ?? 0,
-                TotalPrice = b.Quantity * (b.Product?.Price ?? 0)
-            }).ToList();
+
+            return _mapper.Map<List<BasketItemDto>>(basket);
         }
+
         public async Task<string> AddToBasketAsync(CreateBasketItemDto dto)
         {
             if (dto.Quantity <= 0)
@@ -43,13 +38,7 @@ namespace MiniShopping.Web.Services.BasketItemServices
             }
             else
             {
-                var basket = new BasketItem
-                {
-                    UserId = dto.UserId,
-                    ProductId = dto.ProductId,
-                    Quantity = dto.Quantity
-                };
-
+                var basket = _mapper.Map<BasketItem>(dto);
                 await _uow.Basket.AddToBasketAsync(basket);
             }
 
@@ -57,50 +46,46 @@ namespace MiniShopping.Web.Services.BasketItemServices
 
             return "Product added to basket successfully";
         }
+
         public async Task<string> UpdateQuantity(UpdateBasketItemDto dto)
         {
             var basket = await _uow.Basket.GetByIdAsync(dto.Id);
+
             if (basket == null)
-                throw new Exception("Product not found");
+                throw new Exception("Basket not found");
+
             if (dto.Quantity <= 0)
-                throw new Exception("Quantity must be up to zero");
+                throw new Exception("Quantity must be greater than zero");
 
             basket.Quantity = dto.Quantity;
 
             await _uow.Basket.UpdateQuantityAsync(basket);
             await _uow.SaveAsync();
 
-            return "Quantity updated successfuly";
+            return "Quantity updated successfully";
         }
+
         public async Task<string> DeleteBasketAsync(int id, string userId)
         {
-            var basketUser = await _uow.Basket.GetBasketItemsAsync(userId);
-            if (!basketUser.Any())
-                throw new Exception("Basket not found");
+            var basket = await _uow.Basket.GetByIdAsync(id);
 
-            var basket = basketUser.FirstOrDefault(b => b.Id == id);
-            if (basket == null)
+            if (basket == null || basket.UserId != userId)
                 throw new Exception("Basket not found");
 
             await _uow.Basket.DeleteBasketAsync(basket.Id, basket.UserId);
             await _uow.SaveAsync();
 
-            return "Basket deleted successfuly";
+            return "Basket deleted successfully";
         }
+
         public async Task<BasketItemDto?> GetByUserAndProductAsync(string userId, int productId)
         {
             var basket = await _uow.Basket.GetByUserAndProductAsync(userId, productId);
+
             if (basket == null)
                 throw new Exception("Basket not found");
-            return new BasketItemDto
-            {
-                Id = basket.Id,
-                UserId = userId,
-                ProductId = basket.ProductId,
-                ProductName = basket.Product?.Name ?? "",
-                Quantity = basket.Quantity,
-                UnitPrice = basket.Product?.Price ?? 0,
-            };
+
+            return _mapper.Map<BasketItemDto>(basket);
         }
     }
 }

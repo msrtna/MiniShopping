@@ -1,4 +1,5 @@
-﻿using MiniShopping.Web.Data;
+﻿using AutoMapper;
+using MiniShopping.Web.Data;
 using MiniShopping.Web.DTOs.OrderDtos;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.UnitOfWorks;
@@ -9,11 +10,13 @@ namespace MiniShopping.Web.Services.OrderServices
     {
         private readonly IUnitOfWork _uow;
         private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
 
-        public OrderService(IUnitOfWork uow, AppDbContext context)
+        public OrderService(IUnitOfWork uow, AppDbContext context, IMapper mapper)
         {
             _uow = uow;
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<string> CheckoutAsync(string userId)
@@ -30,24 +33,24 @@ namespace MiniShopping.Web.Services.OrderServices
                 if (!basketItems.Any())
                     throw new Exception("Basket is empty.");
 
+                var productIds = basketItems.Select(x => x.ProductId).ToList();
+                var products = await _uow.Product.GetAllAsync();
+
+                var productDict = products
+                    .Where(p => productIds.Contains(p.Id))
+                    .ToDictionary(p => p.Id);
+
                 decimal totalAmount = 0;
 
                 // بررسی موجودی محصولات
                 foreach (var item in basketItems)
                 {
-                    var product =
-                        await _uow.Product.GetByIdAsync(item.ProductId);
-
-                    if (product == null)
-                        throw new Exception(
-                            $"Product {item.ProductId} not found.");
+                    var product = productDict[item.ProductId];
 
                     if (product.Quantity < item.Quantity)
-                        throw new Exception(
-                            $"Not enough stock for {product.Name}.");
+                        throw new Exception($"Not enough stock for {product.Name}.");
 
-                    totalAmount +=
-                        item.Quantity * product.Price;
+                    totalAmount += item.Quantity * product.Price;
                 }
 
                 // ساخت سفارش
@@ -69,23 +72,20 @@ namespace MiniShopping.Web.Services.OrderServices
 
                 foreach (var item in basketItems)
                 {
-                    var product =
-                        await _uow.Product.GetByIdAsync(item.ProductId);
+                    var product = productDict[item.ProductId];
 
                     orderItems.Add(new OrderItem
                     {
                         OrderId = order.Id,
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
-                        UnitPrice = product!.Price
+                        UnitPrice = product.Price
                     });
 
-                    // کاهش موجودی
                     product.Quantity -= item.Quantity;
 
                     await _uow.Product.UpdateAsync(product);
 
-                    // حذف از سبد
                     await _uow.Basket.DeleteBasketAsync(item.Id, userId);
                 }
 
@@ -106,36 +106,18 @@ namespace MiniShopping.Web.Services.OrderServices
         public async Task<List<OrderDetailDto>> GetOrderDetailsAsync(int orderId)
         {
             var items = await _uow.OrderItem.GetByOrderIdAsync(orderId);
-            return items.Select(o => new OrderDetailDto
-            {
-                ProductName = o.Product.Name,
-                Quantity = o.Quantity,
-                UnitPrice = o.UnitPrice
-            }).ToList();
+            return _mapper.Map<List<OrderDetailDto>>(items);
         }
         public async Task<List<OrderDto>> GetOrdersAsync(string userId)
         {
             var orders = await _uow.Order.GetOrdersAsync(userId);
-            return orders.Select(o => new OrderDto
-            {
-                Id = o.Id,
-                Status = o.Status,
-                OrderDate = o.OrderDate,
-                TotalAmount = o.TotalAmount
-            }).ToList();
+            return _mapper.Map<List<OrderDto>>(orders);
         }
         public async Task<List<AdminOrderDto>> GetAllOrdersAsync()
         {
             var orders = await _uow.Order.GetAllAsync();
 
-            return orders.Select(o => new AdminOrderDto
-            {
-                Id = o.Id,
-                UserEmail = o.User.Email ?? "",
-                OrderDate = o.OrderDate,
-                TotalAmount = o.TotalAmount,
-                Status = o.Status
-            }).ToList();
+            return _mapper.Map<List<AdminOrderDto>>(orders);
         }
         public async Task<string> UpdateStatusAsync(int orderId, string status)
         {

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MiniShopping.Web.DTOs.UserDtos;
 using MiniShopping.Web.Models;
 
@@ -7,13 +9,15 @@ namespace MiniShopping.Web.Services.UserServices
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+
         public UserService(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
+
         public async Task<List<UserDto>> GetAllUsersAsync()
         {
-            var users = _userManager.Users.ToList();
+            var users = await _userManager.Users.ToListAsync();
 
             var result = new List<UserDto>();
 

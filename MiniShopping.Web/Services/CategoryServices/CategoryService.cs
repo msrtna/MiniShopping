@@ -1,4 +1,5 @@
-﻿using MiniShopping.Web.DTOs.CategoryDtos;
+﻿using AutoMapper;
+using MiniShopping.Web.DTOs.CategoryDtos;
 using MiniShopping.Web.Models;
 using MiniShopping.Web.UnitOfWorks;
 
@@ -7,37 +8,29 @@ namespace MiniShopping.Web.Services.CategoryServices
     public class CategoryService : ICategoryService
     {
         private readonly IUnitOfWork _uow;
-        public CategoryService(IUnitOfWork uow)
+        private readonly IMapper _mapper;
+
+        public CategoryService(IUnitOfWork uow, IMapper mapper)
         {
             _uow = uow;
+            _mapper = mapper;
         }
 
         public async Task<List<CategoryDto>> GetAllAsync()
         {
             var category = await _uow.Category.GetAllAsync();
-            return category.Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
+            return _mapper.Map<List<CategoryDto>>(category);
         }
         public async Task<CategoryDto> GetByIdAsync(int id)
         {
             var category = await _uow.Category.GetByIdAsync(id);
             if (category == null)
                 throw new Exception("Category not found");
-            return new CategoryDto
-            {
-                Id = category.Id,
-                Name = category.Name
-            };
+            return _mapper.Map<CategoryDto>(category);
         }
         public async Task<string> AddAsync(CreateCategoryDto dto)
         {
-            var category = new Category()
-            {
-                Name = dto.Name
-            };
+            var category = _mapper.Map<Category>(dto);
             await _uow.Category.AddAsync(category);
             await _uow.SaveAsync();
 
@@ -48,7 +41,7 @@ namespace MiniShopping.Web.Services.CategoryServices
             var category = await _uow.Category.GetByIdAsync(dto.Id);
             if (category == null)
                 throw new Exception("Category not found");
-            category.Name = dto.Name;
+            _mapper.Map(dto, category);
 
             await _uow.Category.UpdateAsync(category);
             await _uow.SaveAsync();
