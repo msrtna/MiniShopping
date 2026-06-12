@@ -9,5 +9,6 @@ namespace MiniShopping.Web.Repositories
         Task AddAsync(Product product);
         Task UpdateAsync(Product product);
         Task DeleteAsync(int id);
+        Task<IQueryable<Product>> GetQueryableAsync();
     }
 }

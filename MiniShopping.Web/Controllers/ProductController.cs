@@ -18,11 +18,18 @@ namespace MiniShopping.Web.Controllers
         }
 
         // Index ------------>>>
-        public async Task<ActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index([FromQuery] ProductQueryDto query)
         {
-            var products = await _service.GetAllAsync();
-            return View(products);
+            var result = await _service.GetProductsPagedAsync(query);
+
+            return View(result);
         }
+        //public async Task<ActionResult> Index()
+        //{
+        //    var products = await _service.GetAllAsync();
+        //    return View(products);
+        //}
 
         // Create ------------>>>
         [Authorize(Roles = "Admin")]

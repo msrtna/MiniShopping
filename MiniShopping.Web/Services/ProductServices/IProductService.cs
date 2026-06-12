@@ -10,5 +10,6 @@ namespace MiniShopping.Web.Services.ProductServices
         Task<string> AddAsync(CreateProductDto dto);
         Task<string> UpdateAsync(UpdateProductDto dto);
         Task<string> DeleteAsync(int id);
+        Task<PagedResult<ProductDto>> GetProductsPagedAsync(ProductQueryDto query);
     }
 }

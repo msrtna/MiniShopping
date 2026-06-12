@@ -35,5 +35,10 @@ namespace MiniShopping.Web.Repositories
             if (product != null)
                 _context.Products.Remove(product);
         }
+
+        public async Task<IQueryable<Product>> GetQueryableAsync()
+        {
+            return _context.Products.Include(p => p.Category);
+        }
     }
 }

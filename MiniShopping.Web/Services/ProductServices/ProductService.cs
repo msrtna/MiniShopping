@@ -1,7 +1,8 @@
-﻿using MiniShopping.Web.DTOs.ProductDtos;
-using MiniShopping.Web.UnitOfWorks;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MiniShopping.Web.DTOs.ProductDtos;
 using MiniShopping.Web.Models;
-using AutoMapper;
+using MiniShopping.Web.UnitOfWorks;
 
 
 namespace MiniShopping.Web.Services.ProductServices
@@ -59,6 +60,48 @@ namespace MiniShopping.Web.Services.ProductServices
             await _uow.SaveAsync();
 
             return "Product deleted successfuly";
+        }
+        public async Task<PagedResult<ProductDto>> GetProductsPagedAsync(ProductQueryDto query)
+        {
+            var productsQuery = await _uow.Product.GetQueryableAsync();
+
+            // SEARCH
+            if (!string.IsNullOrEmpty(query.Search))
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.Name.Contains(query.Search));
+            }
+
+            // FILTER
+            if (query.CategoryId.HasValue)
+            {
+                productsQuery = productsQuery
+                    .Where(p => p.CategoryId == query.CategoryId);
+            }
+
+            // SORT
+            productsQuery = query.Sort switch
+            {
+                "price_asc" => productsQuery.OrderBy(p => p.Price),
+                "price_desc" => productsQuery.OrderByDescending(p => p.Price),
+                _ => productsQuery.OrderByDescending(p => p.Id)
+            };
+
+            var totalCount = await productsQuery.CountAsync();
+
+            // PAGINATION
+            var products = await productsQuery
+                .Skip((query.Page - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync();
+
+            return new PagedResult<ProductDto>
+            {
+                Items = _mapper.Map<List<ProductDto>>(products),
+                TotalCount = totalCount,
+                Page = query.Page,
+                PageSize = query.PageSize
+            };
         }
     }
 }
